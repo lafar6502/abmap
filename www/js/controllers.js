@@ -38,7 +38,31 @@ angular.module('starter.controllers', [])
       $scope.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
       $scope.loading.hide();
     }, function (error) {
-      alert('Unable to get location: ' + error.message);
+      $ionicLoading.hide();
+	  alert('Unable to get location: ' + error.message);
+	  
     });
+  };
+  this.centerV2 = function() {
+	console.log("Centering");
+    if (!$scope.map) {
+      return;
+    };
+		$scope.loading = $ionicLoading.show({
+		  content: 'Getting current location...',
+		  showBackdrop: false
+		});
+		var posOptions = {timeout: 30000, enableHighAccuracy: false};
+		$cordovaGeolocation.getCurrentPosition(posOptions)
+			.then(function (position) {
+			  var lat  = position.coords.latitude;
+			  var long = position.coords.longitude;
+			  $scope.map.setCenter(new google.maps.LatLng(lat, long));
+			  $scope.loading.hide();
+			}, function(err) {
+			  $scope.loading.hide();
+			  alert('Unable to get location: ' + err.message);
+			});
+
   };
 });
