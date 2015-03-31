@@ -26,17 +26,27 @@
     <script src="js/directives.js"></script>
   </head>
 
-  <body ng-app="starter" ng-controller="MapCtrl">
+  <body ng-app="starter" ng-controller="MapCtrl as mc">
     <ion-header-bar class="bar-stable">
-      <h1 class="title">Map</h1>
+      <div>
+		<select ng-model="mc.categorySel"
+				ng-change="mc.categoryChanged()"
+				ng-options="item.name for item in mc.categories track by item.id">
+
+			<option value="" ng-if="!categorySel">-- choose dashboard --</option>
+		</select>
+	</div>
+	<div>
+		<a ng-click="centerOnMe()" class="button button-icon icon ion-navigate"></a>
+	</div>
     </ion-header-bar>
 
     <ion-content scroll="false">
       <map on-create="mapCreated(map)"></map>
     </ion-content>
 
-    <ion-footer-bar class="bar-stable">
-      <a ng-click="centerOnMe()" class="button button-icon icon ion-navigate"></a>
-    </ion-footer-bar>
+    <!--<ion-footer-bar class="bar-stable">
+      
+    </ion-footer-bar> -->
   </body>
 </html>
