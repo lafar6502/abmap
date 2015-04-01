@@ -27,19 +27,15 @@
   </head>
 
   <body ng-app="starter" ng-controller="MapCtrl as mc">
-    <ion-header-bar class="bar-stable">
-      <div>
-		<select ng-model="mc.categorySel"
-				ng-change="mc.categoryChanged()"
-				ng-options="item.name for item in mc.categories track by item.id">
+    <ion-header-bar class="bar-stable ">
 
-			<option value="" ng-if="!categorySel">-- choose dashboard --</option>
-		</select>
-	</div>
-	<div>
-		<a ng-click="centerOnMe()" class="button button-icon icon ion-navigate"></a>
-		<a ng-click="mc.centerV2()" class="button button-icon icon ion-navigate"></a>
-	</div>
+		<div class="buttons">
+			<button class="button" ng-click="mc.selectCategory()">Wybierz kategorię</button>
+		</div>
+		<h1 class="title"></h1>
+		  <div class="buttons">
+			<button ng-click="centerOnMe()" class="button button-icon icon ion-navigate"></button>
+		  </div>
     </ion-header-bar>
 
     <ion-content scroll="false">

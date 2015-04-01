@@ -1,12 +1,20 @@
 angular.module('starter.controllers', [])
 
-.controller('MapCtrl', function($scope, $ionicLoading, $http) {
+.controller('MapCtrl', function($scope, $ionicLoading, $http, $ionicModal) {
   var me = this;
   this.categories = [
 	{"id":"c1", "name":"Restauracje"},
 	{"id":"c2", "name": "Sport i rekreacja"},
 	{"id":"c3", "name": "Rozrywka"}
   ];
+  $scope.categories = this.categories;
+  
+  $ionicModal.fromTemplateUrl('templates/category-select.html', {
+		scope: $scope,
+		animation: 'slide-in-up'
+	  }).then(function(modal) {
+		$scope.modal = modal
+	  });
 
   $http.get("http://www.marcysia.net/categories.json").success(function(data, status, headers, config) {
 		me.categories = data;
@@ -14,6 +22,10 @@ angular.module('starter.controllers', [])
 	});
   $scope.mapCreated = function(map) {
     $scope.map = map;
+  };
+  
+  this.selectCategory = function() {
+	$scope.modal.show();
   };
   
   this.categoryChanged = function() {
