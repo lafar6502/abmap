@@ -8,18 +8,21 @@ angular.module('starter.controllers', [])
 	{"id":"c3", "name": "Rozrywka"}
   ];
   $scope.categories = this.categories;
-  
-  $ionicModal.fromTemplateUrl('templates/category-select.html', {
-		scope: $scope,
-		animation: 'slide-in-up'
+  $scope.doLog = function(a) {
+	console.log(a);
+  };
+
+  $http.get("http://www.4youcard.pl/srv_api.php").success(function(data, status, headers, config) {
+		console.log(data);
+		$scope.categories = me.categories = data;
+		
+	});
+	$ionicModal.fromTemplateUrl('templates/category-select.html', {
+		scope: $scope
 	  }).then(function(modal) {
 		$scope.modal = modal
 	  });
-
-  $http.get("http://www.marcysia.net/categories.json").success(function(data, status, headers, config) {
-		me.categories = data;
-		console.log(data);
-	});
+	  
   $scope.mapCreated = function(map) {
     $scope.map = map;
   };
@@ -28,7 +31,8 @@ angular.module('starter.controllers', [])
 	$scope.modal.show();
   };
   
-  this.categoryChanged = function() {
+  $scope.categoryClicked = function(id) {
+	$scope.modal.hide();
 	if (!$scope.map) {return;}
 	var bnds = $scope.map.getBounds();
 	console.log('bounds', bnds, 'cat:', me.categorySel);
@@ -47,13 +51,12 @@ angular.module('starter.controllers', [])
 
     navigator.geolocation.getCurrentPosition(function (pos) {
       console.log('Got pos', pos);
-      $scope.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
       $scope.loading.hide();
+	  $scope.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
     }, function (error) {
-      $ionicLoading.hide();
+      $scope.loading.hide();
 	  alert('Unable to get location: ' + error.message);
-	  
-    });
+    }, {timeout: 30000, enableHighAccuracy: false});
   };
   this.centerV2 = function() {
 	console.log("Centering");
