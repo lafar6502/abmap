@@ -7,7 +7,7 @@
       <ion-content>
 		<div class="list">
 		  <div class="item" ng-click="categoryClicked(null)" >-- wszystkie --</div>
-		  <div class="item" ng-click="categoryClicked(cat.id)" ng-repeat="cat in categories">{{cat.name}}</div>
+		  <div class="item" ng-click="categoryClicked(cat)" ng-repeat="cat in categories">{{cat.name}}</div>
 		</div class="list">
 		<!--<button class="button button-full button-energized" ng-click="closeModal()">Done</button>-->
       </ion-content>

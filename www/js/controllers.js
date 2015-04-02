@@ -24,10 +24,8 @@ angular.module('starter.controllers', [])
 		$scope.map = map;
 		$scope.centerOnMe();
 	};
-  
-	this.selectCategory = function() {
-		$scope.modal.show();
-	};
+	
+	
   
   var gInfow = null;
   
@@ -48,7 +46,7 @@ angular.module('starter.controllers', [])
 			"<small>" + str(mark.address1) + "</small><br/>",
 			"<small>" + mark.zipcode + "&nbsp;" + mark.city + "</small><br/>",
 			'<span style="color:red;font-size:large">' + mark.discount1 + "&nbsp;" + str(mark.discount2) + "&nbsp;" + str(mark.discount3) + '</span><br/>',
-			'<a href="' + mark.www + '">' + mark.www + '</a><br/>',
+			'<a target="_system" href="' + mark.www + '">' + mark.www + '</a><br/>',
 			'<small>' + str(mark.category) + '</small>'
 		];
 		if (gInfow != null) {
@@ -81,32 +79,62 @@ angular.module('starter.controllers', [])
 	});
   }
   
-	$scope.categoryClicked = function(id) {
+    
+	this.selectedCategory = {name: "Wybierz kategorię"};
+	
+	this.selectCategory = function() {
+		$scope.modal.show();
+	};
+	
+	
+  
+	$scope.categoryClicked = function(cat) {
 		$scope.modal.hide();
+		if (cat == null) {
+			me.selectedCategory = {name: 'Wybierz kategorię'};
+		}
+		else { 
+			me.selectedCategory = cat;
+		};
 		if (!$scope.map) {return;}
 		var bnds = $scope.map.getBounds();
 		console.log('bounds', bnds, 'cat:', me.categorySel);
 	};
-
-	$scope.centerOnMe = function () {
-	console.log("Centering");
-	if (!$scope.map) {
-		return;
+	
+	this.positionStatus = "unknown";
+	
+	me.monitorLocation = function() {
+		me.positionStatus = "watching";
+		id = navigator.geolocation.watchPosition(function(pos) {
+			console.log('pos', pos);
+			me.positionStatus = "got pos";
+		}, 
+		function(err) {
+			console.log('err pos', err);
+			me.positionStatus = "error: " + err.code + ", " + err.message;
+		}, 
+		{  enableHighAccuracy: true,  timeout: 15000,  maximumAge: 10000});
 	}
 
-	$scope.loading = $ionicLoading.show({
-		  content: 'Getting current location...',
-		  showBackdrop: false
-	});
+	$scope.centerOnMe = function () {
+		console.log("Centering");
+		if (!$scope.map) {
+			return;
+		}
 
-	navigator.geolocation.getCurrentPosition(function (pos) {
-		  console.log('Got pos', pos);
-		  $scope.loading.hide();
-		  $scope.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-	}, function (error) {
-		  $scope.loading.hide();
-		  alert('Unable to get location: ' + error.message);
-	}, {timeout: 30000, enableHighAccuracy: false});
+		$scope.loading = $ionicLoading.show({
+			  content: 'Getting current location...',
+			  showBackdrop: false
+		});
+
+		navigator.geolocation.getCurrentPosition(function (pos) {
+			  console.log('Got pos', pos);
+			  $scope.loading.hide();
+			  $scope.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+		}, function (error) {
+			  $scope.loading.hide();
+			  alert('Unable to get location: ' + error.message);
+		}, {timeout: 30000, maximumAge: 30000, enableHighAccuracy: true});
 	};
 	//
 	this.loadLocations();
