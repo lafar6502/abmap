@@ -36,7 +36,7 @@ angular.module('starter.controllers', [])
   
   var configureMarker = function(mark, map) {
 	
-	var site = new google.maps.LatLng(mark.lat, mark.lng);
+	var site = new plugin.google.maps.LatLng(mark.lat, mark.lng);
 	var marker = new google.maps.Marker({position: site, map: map,  title: mark.name});
 	marker.mid = mark.id;
 	me.markers[marker.mid] = marker;
@@ -138,7 +138,7 @@ angular.module('starter.controllers', [])
 		navigator.geolocation.getCurrentPosition(function (pos) {
 			  console.log('Got pos', pos);
 			  $scope.loading.hide();
-			  $scope.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+			  $scope.map.setCenter(new plugin.google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
 		}, function (error) {
 			  $scope.loading.hide();
 			  alert('Unable to get location: ' + error.message);

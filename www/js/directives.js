@@ -19,10 +19,33 @@ angular.module('starter.directives', [])
 		  streetViewControl: false,
 		  overviewMapControl: false
         };*/
+		const GOOGLE = new plugin.google.maps.LatLng(37.422476,-122.08425);
+		var mapOptions = {
+		  'backgroundColor': 'red',
+		  'mapType': plugin.google.maps.MapTypeId.ROADMAP,
+		  'controls': {
+			'compass': true,
+			'myLocationButton': true,
+			'indoorPicker': true,
+			'zoom': true
+		  },
+		  'gestures': {
+			'scroll': true,
+			'tilt': true,
+			'rotate': true,
+			'zoom': true
+		  },
+		  'camera': {
+			'latLng': GOOGLE,
+			'tilt': 30,
+			'zoom': 15,
+			'bearing': 50
+		  }
+		};
 		
 		//alert('plu? ' + plugin + ', w.plu? ' + window.plugin);
 		try {
-			var map = plugin.google.maps.Map.getMap($element[0]);
+			var map = plugin.google.maps.Map.getMap($element[0], mapOptions);
 			map.addEventListener(plugin.google.maps.event.MAP_READY, function() {
 				$scope.onCreate({map: map});
 			});
