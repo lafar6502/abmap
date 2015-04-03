@@ -3,7 +3,7 @@ angular.module('starter.controllers', [])
 .controller('MapCtrl', function($scope, $ionicLoading, $http, $ionicModal) {
 	var me = this;
 	this.categories = [];
-	this.markers = [];
+	this.markers = {};
 
 	$scope.categories = this.categories;
 	$scope.doLog = function (a) {
@@ -38,15 +38,17 @@ angular.module('starter.controllers', [])
 	
 	var site = new google.maps.LatLng(mark.lat, mark.lng);
 	var marker = new google.maps.Marker({position: site, map: map,  title: mark.name});
-	me.markers.push(marker);
+	marker.mid = mark.id;
+	me.markers[marker.mid] = marker;
 	
 	google.maps.event.addListener(marker, 'click', function() {
+		var cliq = "window.open('" + mark.www + "', '_system', 'location=yes'); return false;";
 		var cnt = [
 			"<b>" + mark.name + "</b> <br/>",
 			"<small>" + str(mark.address1) + "</small><br/>",
 			"<small>" + mark.zipcode + "&nbsp;" + mark.city + "</small><br/>",
 			'<span style="color:red;font-size:large">' + mark.discount1 + "&nbsp;" + str(mark.discount2) + "&nbsp;" + str(mark.discount3) + '</span><br/>',
-			'<a target="_system" href="' + mark.www + '">' + mark.www + '</a><br/>',
+			'<a onclick="' + cliq + '" href="#">' + mark.www + '</a><br/>',
 			'<small>' + str(mark.category) + '</small>'
 		];
 		if (gInfow != null) {
@@ -68,13 +70,19 @@ angular.module('starter.controllers', [])
 	$http.get("http://www.marcysia.net/locations.php").success(function(data, status, headers, config) {
 		console.log('locations', data);
 		$scope.locations = data;
+		
 		for (var i=0; i<me.markers.length; i++) {
 			me.markers[i].setMap(null);
 		};
 		me.markers = [];
 		
 		for (var i=0; i<data.length; i++) {
-			configureMarker(data[i], $scope.map);
+			if (data[i].id in me.markers) {
+				
+			}
+			else {
+				configureMarker(data[i], $scope.map);
+			}
 		};
 	});
   }
