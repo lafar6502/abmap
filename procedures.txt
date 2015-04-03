@@ -1,2 +1,5 @@
 C:\Program Files\Microsoft SDKs\Windows\v7.1>c:\tools\jdk8\bin\keytool.exe  -list -v -keystore c:\Users\rg\.android\debug.keystore
 
+ ionic plugin add plugin.google.maps --variable API_KEY_FOR_ANDROID="AIz(...)s3pj8"
+ 
+ 
